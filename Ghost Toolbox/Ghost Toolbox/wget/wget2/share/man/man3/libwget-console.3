@@ -1,0 +1,61 @@
+.TH "libwget-console" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-console \- Console functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwget_console_set_fg_color\fP (WGET_GCC_UNUSED wget_console_color colorid)"
+.br
+.ti -1c
+.RI "void \fBwget_console_reset_fg_color\fP (void)"
+.br
+.ti -1c
+.RI "int \fBwget_console_init\fP (void)"
+.br
+.ti -1c
+.RI "int \fBwget_console_deinit\fP (void)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Routines to address console controls like cursor positioning, fg+bg colors, \&.\&.\&. 
+.SH "Function Documentation"
+.PP 
+.SS "void wget_console_set_fg_color (WGET_GCC_UNUSED wget_console_color colorid)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcolorid\fP Number of foreground/text color to set
+.RE
+.PP
+Sets the console foreground (text) color\&. 
+.SS "void wget_console_reset_fg_color (void)"
+Resets the console foreground (text) color\&. 
+.SS "int wget_console_init (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, or -1 on error
+.RE
+.PP
+Initializes the console\&. 
+.SS "int wget_console_deinit (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, or -1 on error
+.RE
+.PP
+Deinitializes the console\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

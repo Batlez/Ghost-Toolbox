@@ -1,0 +1,392 @@
+.TH "libwget-utils" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-utils \- General utility functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "size_t \fBwget_strlcpy\fP (char *dst, const char *src, size_t size)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_strscpy\fP (char *dst, const char *src, size_t size)"
+.br
+.ti -1c
+.RI "int \fBwget_strcmp\fP (const char *s1, const char *s2)"
+.br
+.ti -1c
+.RI "int \fBwget_strcasecmp\fP (const char *s1, const char *s2)"
+.br
+.ti -1c
+.RI "int \fBwget_strcasecmp_ascii\fP (const char *s1, const char *s2)"
+.br
+.ti -1c
+.RI "int \fBwget_strncasecmp_ascii\fP (const char *s1, const char *s2, size_t n)"
+.br
+.ti -1c
+.RI "char * \fBwget_strtolower\fP (char *s)"
+.br
+.ti -1c
+.RI "int \fBwget_strncmp\fP (const char *s1, const char *s2, size_t n)"
+.br
+.ti -1c
+.RI "int \fBwget_strncasecmp\fP (const char *s1, const char *s2, size_t n)"
+.br
+.ti -1c
+.RI "void \fBwget_memtohex\fP (const unsigned char *src, size_t src_len, char *dst, size_t dst_size)"
+.br
+.ti -1c
+.RI "void \fBwget_millisleep\fP (int ms)"
+.br
+.ti -1c
+.RI "long long \fBwget_get_timemillis\fP (void)"
+.br
+.ti -1c
+.RI "int \fBwget_percent_unescape\fP (char *src)"
+.br
+.ti -1c
+.RI "int \fBwget_match_tail\fP (const char *s, const char *tail)"
+.br
+.ti -1c
+.RI "int \fBwget_match_tail_nocase\fP (const char *s, const char *tail)"
+.br
+.ti -1c
+.RI "char * \fBwget_strnglob\fP (const char *str, size_t n, int flags)"
+.br
+.ti -1c
+.RI "char * \fBwget_human_readable\fP (char *buf, size_t bufsize, uint64_t n)"
+.br
+.ti -1c
+.RI "int \fBwget_get_screen_size\fP (WGET_GCC_UNUSED int *width, WGET_GCC_UNUSED int *height)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This is a collections of short routines that are used with libwget and/or Wget code\&. They may be useful to other developers that is why they are exported\&. 
+.SH "Function Documentation"
+.PP 
+.SS "size_t wget_strlcpy (char * dst, const char * src, size_t size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdst\fP Output string buffer 
+.br
+\fIsrc\fP Input string 
+.br
+\fIsize\fP Size of \fCdst\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Length of \fCsrc\fP 
+.RE
+.PP
+Copy string \fCsrc\fP into \fCdst\fP with overflow checking\&.
+.PP
+This is the same as snprintf(dst,size,'%s',src) but faster and more elegant\&.
+.PP
+If \fCsrc\fP is NULL, the return value is 0 and nothing is written\&. If \\ dst is NULL, the return value is the length of \fCsrc\fP and nothing is written\&. 
+.SS "ssize_t wget_strscpy (char * dst, const char * src, size_t size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdst\fP Output string buffer 
+.br
+\fIsrc\fP Input string 
+.br
+\fIsize\fP Size of \fCdst\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Number of copied bytes (excluding trailing 0) or -1 when \fCsrc\fP doesn't fit into \fCdst\fP 
+.RE
+.PP
+Copy string \fCsrc\fP into \fCdst\fP with overflow checking\&.
+.PP
+If either \fCdst\fP is NULL or \fCsize\fP is 0, the return value is -1 and nothing is written\&. If \fCsrc\fP is NULL and size is 0, the return value is -1\&. If \fCsrc\fP is NULL and size is >0, the return value is 0 and \fCdst\fP is an empty string\&.
+.PP
+Else the return value is the number of bytes copied to \fCdst\fP excluding the terminating 0\&. 
+.SS "int wget_strcmp (const char * s1, const char * s2)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ -1 if \fCs1\fP is NULL and \fCs2\fP is not NULL
+.br
+ 1 if \fCs1\fP is not NULL and \fCs2\fP is NULL else it returns strcmp(\fCs1\fP, \fCs2\fP)
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP in the same way as strcmp() does, except that it also handles NULL values\&. 
+.SS "int wget_strcasecmp (const char * s1, const char * s2)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ -1 if \fCs1\fP is NULL and \fCs2\fP is not NULL
+.br
+ 1 if \fCs1\fP is not NULL and \fCs2\fP is NULL else it returns strcasecmp(\fCs1\fP, \fCs2\fP)
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP in the same way as strcasecmp() does, except that it also handles NULL values\&. 
+.SS "int wget_strcasecmp_ascii (const char * s1, const char * s2)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are the same disregarding case for ASCII letters a-z
+.br
+ 0 if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ <0 if \fCs1\fP is NULL and \fCs2\fP is not NULL or \fCs1\fP is smaller than \fCs2\fP 
+.br
+ >0 if \fCs2\fP is NULL and \fCs1\fP is not NULL or \fCs1\fP is greater than \fCs2\fP\&.
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP as ASCII strings, case insensitive\&. It also accepts NULL values\&. 
+.SS "int wget_strncasecmp_ascii (const char * s1, const char * s2, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.br
+\fIn\fP Max\&. number of chars to compare 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are the same disregarding case for ASCII letters a-z
+.br
+ 0 if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ <0 if \fCs1\fP is NULL and \fCs2\fP is not NULL or \fCs1\fP is smaller than \fCs2\fP 
+.br
+ >0 if \fCs2\fP is NULL and \fCs1\fP is not NULL or \fCs1\fP is greater than \fCs2\fP\&.
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP as ASCII strings, case insensitive, up to a max number of \fCn\fP chars\&. It also accepts NULL values\&. 
+.SS "char* wget_strtolower (char * s)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs\fP String to convert 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Value of s
+.RE
+.PP
+Converts ASCII string \fCs\fP to lowercase in place\&. 
+.SS "int wget_strncmp (const char * s1, const char * s2, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.br
+\fIn\fP Max\&. number of chars to compare 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are the same or if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ <0 if \fCs1\fP is NULL and \fCs2\fP is not NULL or \fCs1\fP is smaller than \fCs2\fP 
+.br
+ >0 if \fCs2\fP is NULL and \fCs1\fP is not NULL or \fCs1\fP is greater than \fCs2\fP\&.
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP in the same way as strncmp() does, except that it also handles NULL values\&. 
+.SS "int wget_strncasecmp (const char * s1, const char * s2, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs1\fP String 
+.br
+\fIs2\fP String 
+.br
+\fIn\fP Max\&. number of chars to compare 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if both \fCs1\fP and \fCs2\fP are the same disregarding case or if both \fCs1\fP and \fCs2\fP are NULL
+.br
+ <0 if \fCs1\fP is NULL and \fCs2\fP is not NULL or \fCs1\fP is smaller than \fCs2\fP 
+.br
+ >0 if \fCs2\fP is NULL and \fCs1\fP is not NULL or \fCs1\fP is greater than \fCs2\fP\&.
+.RE
+.PP
+This functions compares \fCs1\fP and \fCs2\fP in the same way as strncasecmp() does, except that it also handles NULL values\&. 
+.SS "void wget_memtohex (const unsigned char * src, size_t src_len, char * dst, size_t dst_size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIsrc\fP Pointer to input buffer 
+.br
+\fIsrc_len\fP Number of bytes to encode 
+.br
+\fIdst\fP Buffer to hold the encoded string 
+.br
+\fIdst_size\fP Size of \fCdst\fP in bytes
+.RE
+.PP
+Encodes a number of bytes into a lowercase hexadecimal C string\&. 
+.SS "void wget_millisleep (int ms)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIms\fP Number of milliseconds to sleep
+.RE
+.PP
+Pause for \fCms\fP milliseconds\&. 
+.SS "long long wget_get_timemillis (void)"
+Return the current milliseconds since the epoch\&. 
+.SS "int wget_percent_unescape (char * src)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIsrc\fP String to unescape 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if the string did not change
+.br
+ 1 if unescaping took place
+.RE
+.PP
+Does an inline percent unescape\&. Each occurrence of xx (x = hex digit) will converted into it's byte representation\&. 
+.SS "int wget_match_tail (const char * s, const char * tail)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs\fP String 
+.br
+\fItail\fP String 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCtail\fP matches the end of \fCs\fP, 0 if not
+.RE
+.PP
+Checks if \fCtail\fP matches the end of the string \fCs\fP\&. 
+.SS "int wget_match_tail_nocase (const char * s, const char * tail)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs\fP String 
+.br
+\fItail\fP String 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCtail\fP matches the end of \fCs\fP, 0 if not
+.RE
+.PP
+Checks if \fCtail\fP matches the end of the string \fCs\fP, disregarding the case, ASCII only\&. 
+.SS "char* wget_strnglob (const char * str, size_t n, int flags)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIstr\fP String to run glob() against 
+.br
+\fIn\fP Length of string 
+.br
+\fIflags\fP Flags to pass to glob() 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Expanded string after running glob
+.RE
+.PP
+Finds a pathname by running glob(3) on the pattern in the first \fCn\fP bytes of \fCglobstr\fP\&. Returns a newly allocated string with the first \fCn\fP bytes replaced with the matching pattern obtained via glob(3) if one was found\&. Otherwise it returns NULL\&. 
+.SS "char* wget_human_readable (char * buf, size_t bufsize, uint64_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIbuf\fP Result buffer 
+.br
+\fIbufsize\fP Size of /p buf 
+.br
+\fIn\fP Number to convert 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to printable representation of \fCn\fP 
+.RE
+.PP
+Returns a human readable representation of \fCn\fP\&. \fCn\fP, a byte quantity, is converted to a human-readable abbreviated form a la sizes printed by `ls -lh'\&. The result is written into the provided buffer\&.
+.PP
+Unlike `with_thousand_seps', this approximates to the nearest unit\&. Quoting GNU libit: "Most people visually process strings of 3-4 digits effectively, but longer strings of digits are more prone to misinterpretation\&. Hence, converting to an abbreviated form usually improves readability\&."
+.PP
+This intentionally uses kilobyte (KB), megabyte (MB), etc\&. in their original computer-related meaning of 'powers of 1024'\&. We don't use the '*bibyte' names invented in 1998, and seldom used in practice\&. Wikipedia's entry on 'binary prefix' discusses this in some detail\&. 
+.SS "int wget_get_screen_size (WGET_GCC_UNUSED int * width, WGET_GCC_UNUSED int * height)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIwidth\fP Number of columns in terminal 
+.br
+\fIheight\fP Number of rows in terminal 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Upon successful completion, \fCwget_get_screen_size\fP will return 0, and the values of \fCwidth\fP and \fCheight\fP will be set accordingly\&. If an error was encountered, the function will return -1 without touching the values of \fCwidth\fP and \fCheight\fP\&.
+.RE
+.PP
+Get the size of the terminal to which the output is currently printed (stderr)\&. This function accepts two int pointers and will set their values to the width and height of the active terminal in number of columns\&. If either of the parameter is NULL, its value will not be set by the function\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

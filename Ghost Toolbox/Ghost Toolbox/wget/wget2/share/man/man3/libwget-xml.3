@@ -1,0 +1,102 @@
+.TH "libwget-xml" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-xml \- XML parsing functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_xml_parse_buffer\fP (const char *buf, wget_xml_callback *callback, void *user_ctx, int hints)"
+.br
+.ti -1c
+.RI "void \fBwget_html_parse_buffer\fP (const char *buf, wget_xml_callback *callback, void *user_ctx, int hints)"
+.br
+.ti -1c
+.RI "void \fBwget_xml_parse_file\fP (const char *fname, wget_xml_callback *callback, void *user_ctx, int hints)"
+.br
+.ti -1c
+.RI "void \fBwget_html_parse_file\fP (const char *fname, wget_xml_callback *callback, void *user_ctx, int hints)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Function Documentation"
+.PP 
+.SS "int wget_xml_parse_buffer (const char * buf, wget_xml_callback * callback, void * user_ctx, int hints)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIbuf\fP Zero-terminated XML or HTML input data 
+.br
+\fIcallback\fP Function called for each token scan result 
+.br
+\fIuser_ctx\fP User-defined context variable, handed to \fCcallback\fP 
+.br
+\fIhints\fP Flags to influence parsing
+.RE
+.PP
+This function scans the XML input from \fCbuf\fP and calls \fCcallback\fP for each token found\&. \fCuser_ctx\fP is a user-defined context variable and given to each call of \fCcallback\fP\&.
+.PP
+\fChints\fP may be 0 or any combination of XML_HINT_REMOVE_EMPTY_CONTENT and XML_HINT_HTML\&.
+.PP
+XML_HINT_REMOVE_EMPTY_CONTENT reduces the number of calls to \fCcallback\fP by ignoring empty content and superfluous spaces\&.
+.PP
+XML_HINT_HTML turns on HTML scanning\&. 
+.SS "void wget_html_parse_buffer (const char * buf, wget_xml_callback * callback, void * user_ctx, int hints)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIbuf\fP Zero-terminated HTML input data 
+.br
+\fIcallback\fP Function called for each token scan result 
+.br
+\fIuser_ctx\fP User-defined context variable, handed to \fCcallback\fP 
+.br
+\fIhints\fP Flags to influence parsing
+.RE
+.PP
+Convenience function that calls \fBwget_xml_parse_buffer()\fP with HTML parsing turned on\&. 
+.SS "void wget_xml_parse_file (const char * fname, wget_xml_callback * callback, void * user_ctx, int hints)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfname\fP Name of XML or HTML input file 
+.br
+\fIcallback\fP Function called for each token scan result 
+.br
+\fIuser_ctx\fP User-defined context variable, handed to \fCcallback\fP 
+.br
+\fIhints\fP Flags to influence parsing
+.RE
+.PP
+Convenience function that calls \fBwget_xml_parse_buffer()\fP with the file content\&.
+.PP
+If \fCfname\fP is \fC-\fP, the data is read from stdin\&. 
+.SS "void wget_html_parse_file (const char * fname, wget_xml_callback * callback, void * user_ctx, int hints)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfname\fP Name of XML or HTML input file 
+.br
+\fIcallback\fP Function called for each token scan result 
+.br
+\fIuser_ctx\fP User-defined context variable, handed to \fCcallback\fP 
+.br
+\fIhints\fP Flags to influence parsing
+.RE
+.PP
+Convenience function that calls \fBwget_xml_parse_file()\fP with HTML parsing turned on\&.
+.PP
+If \fCfname\fP is \fC-\fP, the data is read from stdin\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

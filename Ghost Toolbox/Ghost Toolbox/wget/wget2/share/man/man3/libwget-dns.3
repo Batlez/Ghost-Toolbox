@@ -1,0 +1,203 @@
+.TH "libwget-dns" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-dns \- DNS resolver functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBwget_dns_stats_data\fP"
+.br
+.ti -1c
+.RI "struct \fBwget_dns_st\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_dns_init\fP (\fBwget_dns\fP **dns)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_free\fP (\fBwget_dns\fP **dns)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_set_timeout\fP (\fBwget_dns\fP *dns, int timeout)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_set_cache\fP (\fBwget_dns\fP *dns, \fBwget_dns_cache\fP *cache)"
+.br
+.ti -1c
+.RI "\fBwget_dns_cache\fP * \fBwget_dns_get_cache\fP (\fBwget_dns\fP *dns)"
+.br
+.ti -1c
+.RI "int \fBwget_dns_cache_ip\fP (\fBwget_dns\fP *dns, const char *ip, const char *name, uint16_t port)"
+.br
+.ti -1c
+.RI "struct addrinfo * \fBwget_dns_resolve\fP (\fBwget_dns\fP *dns, const char *host, uint16_t port, int family, int preferred_family)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_freeaddrinfo\fP (\fBwget_dns\fP *dns, struct addrinfo **addrinfo)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_set_stats_callback\fP (\fBwget_dns\fP *dns, wget_dns_stats_callback *fn, void *ctx)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+DNS Resolver functions\&. 
+.SH "Function Documentation"
+.PP 
+.SS "int wget_dns_init (\fBwget_dns\fP ** dns)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP Pointer to return newly allocated and initialized wget_dns instance 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS if OK, WGET_E_MEMORY if out-of-memory or WGET_E_INVALID if the mutex initialization failed\&.
+.RE
+.PP
+Allocates and initializes a wget_dns instance\&. 
+.SS "void wget_dns_free (\fBwget_dns\fP ** dns)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fI[in/out]\fP dns Pointer to wget_dns instance that will be freed and NULLified\&.
+.RE
+.PP
+Free the resources allocated by \fBwget_dns_init()\fP\&. 
+.SS "void wget_dns_set_timeout (\fBwget_dns\fP * dns, int timeout)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP The wget_dns instance to set the timeout 
+.br
+\fItimeout\fP The timeout value\&.
+.RE
+.PP
+Set the timeout (in milliseconds) for the DNS queries\&.
+.PP
+This is the maximum time to wait until we get a response from the server\&.
+.PP
+Warning: For standard getaddrinfo() a timeout can't be set in a portable way\&. So this functions currently is a no-op\&.
+.PP
+The following two values are special:
+.PP
+.IP "\(bu" 2
+\fC0\fP: No timeout, immediate\&.
+.IP "\(bu" 2
+\fC-1\fP: Infinite timeout\&. Wait indefinitely\&. 
+.PP
+
+.SS "void wget_dns_set_cache (\fBwget_dns\fP * dns, \fBwget_dns_cache\fP * cache)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP A \fCwget_dns\fP instance, created by \fBwget_dns_init()\fP\&. 
+.br
+\fIcache\fP A \fCwget_dns_cache\fP instance
+.RE
+.PP
+Enable or disable DNS caching for the DNS instance provided\&.
+.PP
+The DNS cache is kept internally in memory, and is used in \fBwget_dns_resolve()\fP to speed up DNS queries\&. 
+.SS "\fBwget_dns_cache\fP* wget_dns_get_cache (\fBwget_dns\fP * dns)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP A \fCwget_dns\fP instance, created by \fBwget_dns_init()\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if DNS caching is enabled, 0 otherwise\&.
+.RE
+.PP
+Tells whether DNS caching is enabled or not\&.
+.PP
+You can enable and disable DNS caching with wget_dns_set_caching()\&. 
+.SS "int wget_dns_cache_ip (\fBwget_dns\fP * dns, const char * ip, const char * name, uint16_t port)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIip\fP IP address of name 
+.br
+\fIname\fP Domain name, part of the cache's lookup key 
+.br
+\fIport\fP Port number, part of the cache's lookup key 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, < 0 on error
+.RE
+.PP
+Assign an IP address to the name+port key in the DNS cache\&. The \fCname\fP should be lowercase\&. 
+.SS "struct addrinfo* wget_dns_resolve (\fBwget_dns\fP * dns, const char * host, uint16_t port, int family, int preferred_family)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP A \fCwget_dns\fP instance, created by \fBwget_dns_init()\fP\&. 
+.br
+\fIhost\fP Hostname 
+.br
+\fIport\fP TCP destination port 
+.br
+\fIfamily\fP Protocol family AF_INET or AF_INET6 
+.br
+\fIpreferred_family\fP Preferred protocol family AF_INET or AF_INET6 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A \fCstruct addrinfo\fP structure (defined in libc's \fC<netdb\&.h>\fP)\&. Must be freed by the caller with \fC\fBwget_dns_freeaddrinfo()\fP\fP\&.
+.RE
+.PP
+Resolve a host name into its IPv4/IPv6 address\&.
+.PP
+\fBfamily\fP: Desired address family for the returned addresses\&. This will typically be \fCAF_INET\fP or \fCAF_INET6\fP, but it can be any of the values defined in \fC<socket\&.h>\fP\&. Additionally, \fCAF_UNSPEC\fP means you don't care: it will return any address family that can be used with the specified \fChost\fP and \fCport\fP\&. If \fBfamily\fP is different than \fCAF_UNSPEC\fP and the specified family is not found, \fIthat's an error condition\fP and thus \fBwget_dns_resolve()\fP will return NULL\&.
+.PP
+\fBpreferred_family\fP: Tries to resolve addresses of this family if possible\&. This is only honored if \fBfamily\fP (see point above) is \fCAF_UNSPEC\fP\&.
+.PP
+The returned \fCaddrinfo\fP structure must be freed with \fC\fBwget_dns_freeaddrinfo()\fP\fP\&. 
+.SS "void wget_dns_freeaddrinfo (\fBwget_dns\fP * dns, struct addrinfo ** addrinfo)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP A \fCwget_dns\fP instance, created by \fBwget_dns_init()\fP\&. 
+.br
+\fI[in/out]\fP addrinfo Value returned by \fCc\fP
+.RE
+.PP
+Release addrinfo, previously returned by \fC\fBwget_dns_resolve()\fP\fP\&. If the underlying \fCdns\fP uses caching, just the reference/pointer is set to NULL\&. 
+.SS "void wget_dns_set_stats_callback (\fBwget_dns\fP * dns, wget_dns_stats_callback * fn, void * ctx)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdns\fP A \fCwget_dns\fP instance, created by \fBwget_dns_init()\fP\&. 
+.br
+\fIfn\fP A \fCwget_dns_stats_callback\fP callback function to receive resolve statistics data 
+.br
+\fIctx\fP Context data given to \fCfn\fP 
+.RE
+.PP
+Set callback function to be called once DNS statistics for a host are collected 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

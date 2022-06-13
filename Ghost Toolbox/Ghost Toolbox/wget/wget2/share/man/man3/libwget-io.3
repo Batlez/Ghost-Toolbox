@@ -1,0 +1,221 @@
+.TH "libwget-io" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-io \- I/O helper routines
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "ssize_t \fBwget_fdgetline\fP (char **buf, size_t *bufsize, int fd)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_getline\fP (char **buf, size_t *bufsize, FILE *fp)"
+.br
+.ti -1c
+.RI "int \fBwget_ready_2_transfer\fP (int fd, int timeout, int mode)"
+.br
+.ti -1c
+.RI "int \fBwget_ready_2_read\fP (int fd, int timeout)"
+.br
+.ti -1c
+.RI "int \fBwget_ready_2_write\fP (int fd, int timeout)"
+.br
+.ti -1c
+.RI "char * \fBwget_read_file\fP (const char *fname, size_t *size)"
+.br
+.ti -1c
+.RI "int \fBwget_update_file\fP (const char *fname, wget_update_load_fn *load_func, wget_update_load_fn *save_func, void *context)"
+.br
+.ti -1c
+.RI "int \fBwget_truncate\fP (const char *path, off_t length)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Some general I/O helper functions that could be handy for developers\&. 
+.SH "Function Documentation"
+.PP 
+.SS "ssize_t wget_fdgetline (char ** buf, size_t * bufsize, int fd)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIbuf\fP Pointer to a pointer that will be set up by the function to point to the read line 
+.br
+\fIbufsize\fP Pointer to a variable where the length of the read line will be put 
+.br
+\fIfd\fP File descriptor for an open file 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The length of the last line read or a WGET_E_* error code (< 0)
+.RE
+.PP
+Behaves identically as \fBwget_getline()\fP, but uses a file descriptor instead of a stream\&. 
+.SS "ssize_t wget_getline (char ** buf, size_t * bufsize, FILE * fp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIbuf\fP Pointer to a pointer that will be set up by the function to point to the read line 
+.br
+\fIbufsize\fP Pointer to a variable where the length of the read line will be put 
+.br
+\fIfp\fP Pointer to an open file's stream handle (\fCFILE *\fP) 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The length of the last line read or a WGET_E_* error code (< 0)
+.RE
+.PP
+This function will read a line from the open file handle \fCfp\fP\&. This function reads input characters until either a newline character (\fC\\\\n\fP) is found or EOF is reached\&. A block of memory large enough to hold the read line will be implicitly allocated by the function, and its address placed at the pointer pointed to by \fCbuf\fP\&. The length of the aforementioned memory block will be stored in the variable pointed at by \fCbufsize\fP\&.
+.PP
+The caller is not expected to allocate memory as that will be automatically done by \fBwget_getline()\fP, but it is responsibility of the caller free the memory allocated by a previous invocation of this function\&. The caller is also responsible for opening and closing the file to read from\&.
+.PP
+Subsequent calls to \fBwget_getline()\fP that use the same block of memory allocated by previous calls (that is, the caller did not free the buffer returned by a previous call to \fBwget_getline()\fP) will try to reuse as much as possible from the available memory\&. The block of memory allocated by \fBwget_getline()\fP may be larger than the length of the line read, and might even contain additional lines in it\&. When \fBwget_getline()\fP returns, the contents of the buffer (pointed at by \fCbuf\fP) are guaranteed to start with the first character of the last line read, and such line is also guaranteed to end with a NULL termination character (\fC\\0\fP)\&. The length of the last read line will be returned by \fBwget_getline()\fP, whereas the actual length of the buffer will be placed in the variable pointed at by \fCbufsize\fP\&. The newline character (\fC\\\\n\fP) will not be included in the last read line\&. 
+.SS "int wget_ready_2_transfer (int fd, int timeout, int mode)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfd\fP File descriptor to wait for 
+.br
+\fItimeout\fP Max\&. duration in milliseconds to wait 
+.br
+\fImode\fP Either \fCWGET_IO_WRITABLE\fP or \fCWGET_IO_READABLE\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+-1 on error
+.br
+ 0 on timeout - the file descriptor is not ready for reading or writing
+.br
+ >0 The file descriptor is ready for reading or writing\&. Check for the bitwise or of \fCWGET_IO_WRITABLE\fP and \fCWGET_IO_READABLE\fP\&.
+.RE
+.PP
+Wait for a file descriptor to become ready to read or write\&.
+.PP
+A \fCtimeout\fP value of 0 means the function returns immediately\&.
+.br
+ A \fCtimeout\fP value of -1 means infinite timeout\&. 
+.SS "int wget_ready_2_read (int fd, int timeout)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfd\fP File descriptor to wait for 
+.br
+\fItimeout\fP Max\&. duration in milliseconds to wait 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+-1 on error
+.br
+ 0 on timeout - the file descriptor is not ready for reading
+.br
+ 1 on success - the file descriptor is ready for reading
+.br
+.RE
+.PP
+Wait for a file descriptor to become ready to read\&.
+.PP
+A \fCtimeout\fP value of 0 means the function returns immediately\&.
+.br
+ A \fCtimeout\fP value of -1 means infinite timeout\&. 
+.SS "int wget_ready_2_write (int fd, int timeout)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfd\fP File descriptor to wait for 
+.br
+\fItimeout\fP Max\&. duration in milliseconds to wait 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+-1 on error
+.br
+ 0 on timeout - the file descriptor is not ready for writing
+.br
+ 1 on success - the file descriptor is ready for writing
+.RE
+.PP
+Wait for a file descriptor to become ready to write\&.
+.PP
+A \fCtimeout\fP value of 0 means the function returns immediately\&.
+.br
+ A \fCtimeout\fP value of -1 means infinite timeout\&. 
+.SS "char* wget_read_file (const char * fname, size_t * size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfname\fP The name of the file to read from, or a dash (\fC-\fP) to read from STDIN 
+.br
+\fIsize\fP Pointer to a variable where the length of the contents read will be stored 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the read data, as a NULL-terminated C string
+.RE
+.PP
+Reads the content of a file, or from STDIN\&. When reading from STDIN, the behavior is the same as for regular files: input is read until an EOF character is found\&.
+.PP
+Memory will be accordingly allocated by \fBwget_read_file()\fP and a pointer to it returned when the read finishes, but the caller is responsible for freeing that memory\&. The length of the allocated block of memory, which is guaranteed to be the same as the length of the data read, will be placed in the variable pointed at by \fCsize\fP\&.
+.PP
+The read data is guaranteed to be appended a NUL termination character (\fC\\0\fP)\&. 
+.SS "int wget_update_file (const char * fname, wget_update_load_fn * load_func, wget_update_load_fn * save_func, void * context)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIfname\fP File name to update 
+.br
+\fIload_func\fP Pointer to the loader function 
+.br
+\fIsave_func\fP Pointer to the saver function 
+.br
+\fIcontext\fP Context data 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, or WGET_E_* on error
+.RE
+.PP
+This function updates the file named \fCfname\fP atomically\&. It lets two caller-provided functions do the actual updating\&. A lock file is created first under \fC/tmp\fP to ensure exclusive access to the file\&. Other processes attempting to call \fBwget_update_file()\fP with the same \fCfname\fP parameter will block until the current calling process has finished (that is, until \fBwget_update_file()\fP has returned)\&.
+.br
+ Then, the file is opened with read access first, and the \fCload_func\fP function is called\&. When it returns, the file is closed and opened again with write access, and the \fCsave_func\fP function is called\&. Both callback functions are passed the context data \fCcontext\fP, and a stream descriptor for the file\&. If either function \fCload_func\fP or \fCsave_func\fP returns a non-zero value, \fBwget_update_file()\fP closes the file and returns -1, performing no further actions\&. 
+.SS "int wget_truncate (const char * path, off_t length)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIpath\fP File path 
+.br
+\fIlength\fP New file size 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, or -1 on error
+.RE
+.PP
+Set \fCpath\fP to a size of exactly \fClength\fP bytes\&.
+.PP
+If the file was previously larger, the extra data is lost\&. If the file was previously shorter, extra zero bytes are added\&.
+.PP
+On POSIX, this is a wrapper around ftruncate() (see 'man ftruncate' for details)\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

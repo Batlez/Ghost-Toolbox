@@ -1,0 +1,279 @@
+.TH "libwget-thread" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-thread \- Implementation of multi-threading basic functionality
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBwget_thread_st\fP"
+.br
+.ti -1c
+.RI "struct \fBwget_thread_mutex_st\fP"
+.br
+.ti -1c
+.RI "struct \fBwget_thread_cond_st\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_thread_mutex_init\fP (\fBwget_thread_mutex\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_mutex_destroy\fP (\fBwget_thread_mutex\fP *mutex)"
+.br
+.ti -1c
+.RI "void \fBwget_thread_mutex_lock\fP (\fBwget_thread_mutex\fP mutex)"
+.br
+.ti -1c
+.RI "void \fBwget_thread_mutex_unlock\fP (\fBwget_thread_mutex\fP mutex)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_cond_init\fP (\fBwget_thread_cond\fP *cond)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_cond_destroy\fP (\fBwget_thread_cond\fP *cond)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_cond_signal\fP (\fBwget_thread_cond\fP cond)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_cond_wait\fP (\fBwget_thread_cond\fP cond, \fBwget_thread_mutex\fP mutex, long long ms)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_start\fP (\fBwget_thread\fP *thread, void *(*start_routine)(void *), void *arg, WGET_GCC_UNUSED int flags)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_cancel\fP (WGET_GCC_UNUSED \fBwget_thread\fP thread)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_kill\fP (WGET_GCC_UNUSED \fBwget_thread\fP thread, WGET_GCC_UNUSED int sig)"
+.br
+.ti -1c
+.RI "int \fBwget_thread_join\fP (\fBwget_thread\fP *thread)"
+.br
+.ti -1c
+.RI "wget_thread_id \fBwget_thread_self\fP (void)"
+.br
+.ti -1c
+.RI "bool \fBwget_thread_support\fP (void)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This is a wrapper around Gnulib's glthread functionality\&.
+.PP
+It currently supports Posix threads (pthreads), GNU Pth threads, Solaris threads and Windows threads\&. 
+.SH "Function Documentation"
+.PP 
+.SS "int wget_thread_mutex_init (\fBwget_thread_mutex\fP * mutex)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImutex\fP The mutex to initialize 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Initializes the \fCmutex\fP\&.
+.PP
+After usage, a call to \fBwget_thread_mutex_destroy()\fP frees the allocated resources\&. 
+.SS "int wget_thread_mutex_destroy (\fBwget_thread_mutex\fP * mutex)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImutex\fP The mutex to destroy 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Free's the \fCmutex\fP and it's resources\&.
+.PP
+After calling this function, the \fCmutex\fP cannot be used any more\&. 
+.SS "void wget_thread_mutex_lock (\fBwget_thread_mutex\fP mutex)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImutex\fP The mutex to be locked
+.RE
+.PP
+Creates a lock on the \fCmutex\fP\&.
+.PP
+To unlock the \fCmutex\fP, call \fBwget_thread_mutex_unlock()\fP\&. 
+.SS "void wget_thread_mutex_unlock (\fBwget_thread_mutex\fP mutex)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImutex\fP The mutex to be unlocked
+.RE
+.PP
+Unlocks the \fCmutex\fP\&. 
+.SS "int wget_thread_cond_init (\fBwget_thread_cond\fP * cond)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcond\fP The conditional to initialize 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Initializes the conditional \fCcond\fP\&.
+.PP
+After usage, a call to \fBwget_thread_cond_destroy()\fP frees the allocated resources\&. 
+.SS "int wget_thread_cond_destroy (\fBwget_thread_cond\fP * cond)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcond\fP The conditional to destroy 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Free's the conditional \fCcond\fP and it's resources\&.
+.PP
+After calling this function, \fCcond\fP cannot be used any more\&. 
+.SS "int wget_thread_cond_signal (\fBwget_thread_cond\fP cond)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcond\fP The conditional to signal a condition 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Wakes up one (random) thread that waits on the conditional\&. 
+.SS "int wget_thread_cond_wait (\fBwget_thread_cond\fP cond, \fBwget_thread_mutex\fP mutex, long long ms)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcond\fP The conditional to wait for 
+.br
+\fImutex\fP The mutex needed for thread-safety 
+.br
+\fIms\fP The wait timeout in milliseconds 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Waits for a condition with a max\&. timeout of \fCms\fP milliseconds\&.
+.PP
+To wait forever use a timeout lower or equal then 0\&. 
+.SS "int wget_thread_start (\fBwget_thread\fP * thread, void *(*)(void *) start_routine, void * arg, WGET_GCC_UNUSED int flags)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIthread\fP The thread variable to be initialized 
+.br
+\fIstart_routine\fP The thread function to start 
+.br
+\fIarg\fP The argument given to \fCstart_routine\fP 
+.br
+\fIflags\fP Currently unused 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Start \fCstart_routine\fP as own thread with argument \fCarg\fP\&. 
+.SS "int wget_thread_cancel (WGET_GCC_UNUSED \fBwget_thread\fP thread)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIthread\fP Thread to cancel 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Currently a no-op function, since it's not portable\&. 
+.SS "int wget_thread_kill (WGET_GCC_UNUSED \fBwget_thread\fP thread, WGET_GCC_UNUSED int sig)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIthread\fP Thread to send the signal to 
+.br
+\fIsig\fP Signal to send 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Currently a no-op function, since it's not portable\&. 
+.SS "int wget_thread_join (\fBwget_thread\fP * thread)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIthread\fP Thread to wait for 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 on success, non-zero on failure
+.RE
+.PP
+Wait until the \fCthread\fP has been stopped\&.
+.PP
+This function just waits - to stop a thread you have take your own measurements\&. 
+.SS "wget_thread_id wget_thread_self (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+The thread id of the caller\&. 
+.RE
+.PP
+
+.SS "bool wget_thread_support (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+Whether libwget supports multi-threading on this platform or not\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

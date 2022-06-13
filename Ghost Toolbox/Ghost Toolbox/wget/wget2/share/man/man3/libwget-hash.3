@@ -1,0 +1,105 @@
+.TH "libwget-hash" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-hash \- Hash convenience functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Files"
+
+.in +1c
+.ti -1c
+.RI "file \fBhashfile\&.c\fP"
+.br
+.RI "Hashing functions\&. "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBwget_hash_hd_st\fP \fBwget_hash_hd\fP"
+.br
+.RI "Type for hash / digest routines\&. "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBwget_digest_algorithm\fP { \fBWGET_DIGTYPE_UNKNOWN\fP = 0, \fBWGET_DIGTYPE_MD5\fP, \fBWGET_DIGTYPE_SHA1\fP, \fBWGET_DIGTYPE_RMD160\fP, \fBWGET_DIGTYPE_MD2\fP, \fBWGET_DIGTYPE_SHA256\fP, \fBWGET_DIGTYPE_SHA384\fP, \fBWGET_DIGTYPE_SHA512\fP, \fBWGET_DIGTYPE_SHA224\fP, \fBWGET_DIGTYPE_MAX\fP }"
+.br
+.RI "Enumeration of different hash digest algorithms\&. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwget_hash_printf_hex\fP (\fBwget_digest_algorithm\fP algorithm, char *out, size_t outsize, const char *fmt,\&.\&.\&.)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Provides Hash helper functions 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBwget_digest_algorithm\fP"
+
+.PP
+Enumeration of different hash digest algorithms\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIWGET_DIGTYPE_UNKNOWN \fP\fP
+Indicates 'Unknown hash algorithm', returned by \fBwget_hash_get_algorithm()\fP 
+.TP
+\fB\fIWGET_DIGTYPE_MD5 \fP\fP
+Type 'MD5' digest 
+.TP
+\fB\fIWGET_DIGTYPE_SHA1 \fP\fP
+Type SHA1 digest 
+.TP
+\fB\fIWGET_DIGTYPE_RMD160 \fP\fP
+Type RMD160 digest 
+.TP
+\fB\fIWGET_DIGTYPE_MD2 \fP\fP
+Type 'MD2' digest 
+.TP
+\fB\fIWGET_DIGTYPE_SHA256 \fP\fP
+Type 'SHA256' digest 
+.TP
+\fB\fIWGET_DIGTYPE_SHA384 \fP\fP
+Type 'SHA384' digest 
+.TP
+\fB\fIWGET_DIGTYPE_SHA512 \fP\fP
+Type 'SHA512' digest 
+.TP
+\fB\fIWGET_DIGTYPE_SHA224 \fP\fP
+Type 'SHA224' digest 
+.TP
+\fB\fIWGET_DIGTYPE_MAX \fP\fP
+Number of digest types 
+.SH "Function Documentation"
+.PP 
+.SS "void wget_hash_printf_hex (\fBwget_digest_algorithm\fP algorithm, char * out, size_t outsize, const char * fmt,  \&.\&.\&.)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIalgorithm\fP The hash algorithm to use 
+.br
+\fIout\fP Output string buffer 
+.br
+\fIoutsize\fP Size of output string buffer 
+.br
+\fIfmt\fP Printf-like format specifier 
+.br
+\fI\&.\&.\&.\fP List of arguments
+.RE
+.PP
+Calculate the hash from the string generated via the printf-style \fCfmt\fP and the following arguments and place it as hexadecimal string into \fCout\fP\&.
+.PP
+The ideal length of \fCout\fP would be wget_hash_get_len(type) * 2 + 1\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

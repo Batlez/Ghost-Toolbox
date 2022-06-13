@@ -1,0 +1,99 @@
+.TH "libwget-mem" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-mem \- Memory functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void * \fBwget_memdup\fP (const void *m, size_t n)"
+.br
+.ti -1c
+.RI "char * \fBwget_strdup\fP (const char *s)"
+.br
+.ti -1c
+.RI "char * \fBwget_strmemdup\fP (const void *m, size_t n)"
+.br
+.ti -1c
+.RI "void \fBwget_strmemcpy\fP (char *s, size_t ssize, const void *m, size_t n)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This is a collections of short memory function not available in standard libraries\&. 
+.SH "Function Documentation"
+.PP 
+.SS "void* wget_memdup (const void * m, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIm\fP Memory to clone 
+.br
+\fIn\fP Length of memory 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Cloned memory
+.RE
+.PP
+Clone's the memory region \fCm\fP with length \fCn\fP\&. Returns NULL if \fCm\fP is NULL\&.
+.PP
+You should free() the returned pointer when not needed any more\&. 
+.SS "char* wget_strdup (const char * s)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs\fP String to clone 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Cloned string
+.RE
+.PP
+Clone's the string \fCs\fP like strdup() does\&. Returns NULL if \fCs\fP is NULL\&.
+.PP
+You should free() the returned string when not needed any more\&. 
+.SS "char* wget_strmemdup (const void * m, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIm\fP Memory to convert into string 
+.br
+\fIn\fP Length of memory 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Created string
+.RE
+.PP
+Convert the given memory region \fCm\fP with length \fCn\fP into a C string\&. Returns NULL if \fCm\fP is NULL\&.
+.PP
+You should free() the returned string when not needed any more\&. 
+.SS "void wget_strmemcpy (char * s, size_t ssize, const void * m, size_t n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIs\fP Buffer to hold the C string output 
+.br
+\fIssize\fP Size of the output buffer 
+.br
+\fIm\fP Memory to read from 
+.br
+\fIn\fP Length of memory
+.RE
+.PP
+Convert the given memory region \fCm\fP with length \fCn\fP into a C string at \fCs\fP\&. A max\&. of \fCssize\fP - 1 is copied into \fCs\fP\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

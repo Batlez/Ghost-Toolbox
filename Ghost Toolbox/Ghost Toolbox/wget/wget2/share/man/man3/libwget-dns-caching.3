@@ -1,0 +1,105 @@
+.TH "libwget-dns-caching" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-dns-caching \- DNS caching
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcache_entry\fP"
+.br
+.ti -1c
+.RI "struct \fBwget_dns_cache_st\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_dns_cache_init\fP (\fBwget_dns_cache\fP **cache)"
+.br
+.ti -1c
+.RI "void \fBwget_dns_cache_free\fP (\fBwget_dns_cache\fP **cache)"
+.br
+.ti -1c
+.RI "struct addrinfo * \fBwget_dns_cache_get\fP (\fBwget_dns_cache\fP *cache, const char *host, uint16_t port)"
+.br
+.ti -1c
+.RI "int \fBwget_dns_cache_add\fP (\fBwget_dns_cache\fP *cache, const char *host, uint16_t port, struct addrinfo **addrinfo)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+DNS cache management functions\&. 
+.SH "Function Documentation"
+.PP 
+.SS "int wget_dns_cache_init (\fBwget_dns_cache\fP ** cache)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcache\fP Pointer to return newly allocated and initialized wget_dns_cache instance 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS if OK, WGET_E_MEMORY if out-of-memory or WGET_E_INVALID if the mutex initialization failed\&.
+.RE
+.PP
+Allocates and initializes a wget_dns_cache instance\&. 
+.SS "void wget_dns_cache_free (\fBwget_dns_cache\fP ** cache)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fI[in/out]\fP cache Pointer to wget_dns_cache instance that will be freed and NULLified\&.
+.RE
+.PP
+Free the resources allocated by \fBwget_dns_cache_init()\fP\&. 
+.SS "struct addrinfo* wget_dns_cache_get (\fBwget_dns_cache\fP * cache, const char * host, uint16_t port)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcache\fP A \fCwget_dns_cache\fP instance, created by \fBwget_dns_cache_init()\fP\&. 
+.br
+\fIhost\fP Hostname to look up 
+.br
+\fIport\fP Port to look up 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The cached addrinfo structure or NULL if not found 
+.RE
+.PP
+
+.SS "int wget_dns_cache_add (\fBwget_dns_cache\fP * cache, const char * host, uint16_t port, struct addrinfo ** addrinfo)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIcache\fP A \fCwget_dns_cache\fP instance, created by \fBwget_dns_cache_init()\fP\&. 
+.br
+\fIhost\fP Hostname part of the key 
+.br
+\fIport\fP Port part of the key 
+.br
+\fI[in/out]\fP addrinfo Addrinfo structure to cache, returns cached addrinfo 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS on success, else a WGET_E_* error value
+.RE
+.PP
+This functions adds \fCaddrinfo\fP to the given DNS cache \fCcache\fP\&.
+.PP
+If an entry for [host,port] already exists, \fCaddrinfo\fP is free'd and replaced by the cached entry\&. Do not free \fCaddrinfo\fP yourself - this will be done when the whole cache is freed\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

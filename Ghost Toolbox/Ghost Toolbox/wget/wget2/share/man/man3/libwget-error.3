@@ -1,0 +1,37 @@
+.TH "libwget-error" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-error \- Error functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "const char * \fBwget_strerror\fP (wget_error err)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Here are th implementations of libwget error functions\&. 
+.SH "Function Documentation"
+.PP 
+.SS "const char* wget_strerror (wget_error err)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrc\fP Error code from another libwget function 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A humanly readable string describing error
+.RE
+.PP
+Convert an internal libwget error code to a humanly readable string\&. The returned pointer must not be de-allocated by the caller\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

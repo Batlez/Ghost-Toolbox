@@ -1,0 +1,241 @@
+.TH "libwget-list" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-list \- Double linked list
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBwget_list_st\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBwget_list_st\fP \fBwget_list\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void * \fBwget_list_append\fP (\fBwget_list\fP **list, const void *data, size_t size)"
+.br
+.ti -1c
+.RI "void * \fBwget_list_prepend\fP (\fBwget_list\fP **list, const void *data, size_t size)"
+.br
+.ti -1c
+.RI "void \fBwget_list_remove\fP (\fBwget_list\fP **list, void *elem)"
+.br
+.ti -1c
+.RI "void * \fBwget_list_getfirst\fP (const \fBwget_list\fP *list)"
+.br
+.ti -1c
+.RI "void * \fBwget_list_getlast\fP (const \fBwget_list\fP *list)"
+.br
+.ti -1c
+.RI "void * \fBwget_list_getnext\fP (const void *elem)"
+.br
+.ti -1c
+.RI "int \fBwget_list_browse\fP (const \fBwget_list\fP *list, wget_list_browse_fn *browse, void *context)"
+.br
+.ti -1c
+.RI "void \fBwget_list_free\fP (\fBwget_list\fP **list)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Double linked lists provide fast insertion, removal and iteration in either direction\&.
+.PP
+Each element has pointers to the next and the previous element\&.
+.br
+ Iteration can be done by calling the \fBwget_list_browse()\fP function, so the list structure doesn't need to be exposed\&.
+.PP
+This datatype is used by the Wget tool to implement the job queue (append and remove)\&.
+.PP
+See \fBwget_list_append()\fP for an example on how to use lists\&. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBwget_list_st\fP \fBwget_list\fP"
+Type for double linked lists and list entries\&. 
+.SH "Function Documentation"
+.PP 
+.SS "void* wget_list_append (\fBwget_list\fP ** list, const void * data, size_t size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to Pointer to a double linked list 
+.br
+\fIdata\fP Pointer to data to be inserted 
+.br
+\fIsize\fP Size of data in bytes 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the new element or NULL if memory allocation failed
+.RE
+.PP
+Append an element to the end of the list\&.
+.br
+ \fCsize\fP bytes at \fCdata\fP will be copied and appended to the list\&.
+.PP
+A pointer to the new element will be returned\&.
+.PP
+\fBNote\fP
+.RS 4
+The returned pointer must be freed by \fBwget_list_remove()\fP or implicitly by \fBwget_list_free()\fP\&.
+.RE
+.PP
+Example:
+.PP
+.PP
+.nf
+wget_list *list = NULL;
+struct mystruct mydata1 = { \&.x = 1, \&.y = 25 };
+struct mystruct mydata2 = { \&.x = 5, \&.y = 99 };
+struct mystruct *data;
+
+wget_list_append(&list, &mydata1, sizeof(mydata1)); // append mydata1 to list
+wget_list_append(&list, &mydata2, sizeof(mydata2)); // append mydata2 to list
+
+data = wget_list_getfirst(list);
+printf("data=(%d,%d)\n", data->x, data->y); // prints 'data=(1,25)'
+
+wget_list_remove(&list, data);
+
+data = wget_list_getfirst(list);
+printf("data=(%d,%d)\n", data->x, data->y); // prints 'data=(5,99)'
+
+wget_list_free(&list);
+.fi
+.PP
+ 
+.SS "void* wget_list_prepend (\fBwget_list\fP ** list, const void * data, size_t size)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to Pointer to a double linked list 
+.br
+\fIdata\fP Pointer to data to be inserted 
+.br
+\fIsize\fP Size of data in bytes 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the new element
+.RE
+.PP
+Insert an entry at the beginning of the list\&. \fCsize\fP bytes at \fCdata\fP will be copied and prepended to the list\&.
+.PP
+A pointer to the new element will be returned\&. It must be freed by \fBwget_list_remove()\fP or implicitly by \fBwget_list_free()\fP\&. 
+.SS "void wget_list_remove (\fBwget_list\fP ** list, void * elem)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to Pointer to a double linked list 
+.br
+\fIelem\fP Pointer to a list element returned by \fBwget_list_append()\fP or \fBwget_list_prepend()\fP
+.RE
+.PP
+Remove an element from the list\&. 
+.SS "void* wget_list_getfirst (const \fBwget_list\fP * list)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to a double linked list 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the first element of the list or NULL if the list is empty
+.RE
+.PP
+Get the first element of a list\&. 
+.SS "void* wget_list_getlast (const \fBwget_list\fP * list)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to a double linked list 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the last element of the list or NULL if the list is empty
+.RE
+.PP
+Get the last element of a list\&. 
+.SS "void* wget_list_getnext (const void * elem)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIelem\fP Pointer to an element of a linked list 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the next element of the list or NULL if the list is empty
+.RE
+.PP
+Get the next element of a list\&. 
+.SS "int wget_list_browse (const \fBwget_list\fP * list, wget_list_browse_fn * browse, void * context)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to a double linked list 
+.br
+\fIbrowse\fP Pointer to callback function which is called for every element in the list\&. If the callback functions returns a value not equal to zero, browsing is stopped and this value will be returned by wget_list_browse\&. 
+.br
+\fIcontext\fP The context handle that will be passed to the callback function 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The return value of the last call to the browse function or -1 if \fClist\fP is NULL (empty)
+.RE
+.PP
+Iterate through all entries of the \fClist\fP and call the function \fCbrowse\fP for each\&.
+.PP
+.PP
+.nf
+// assume that list contains C strings\&.
+wget_list *list = NULL;
+
+static int print_elem(void *context, const char *elem)
+{
+   printf("%s\n",elem);
+   return 0;
+}
+
+void dump(WGET_LIST *list)
+{
+   wget_list_browse(list, (wget_list_browse_t)print_elem, NULL);
+}
+.fi
+.PP
+ 
+.SS "void wget_list_free (\fBwget_list\fP ** list)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIlist\fP Pointer to Pointer to a double linked list
+.RE
+.PP
+Freeing the list and it's entry\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

@@ -1,0 +1,681 @@
+.TH "libwget-net" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-net \- TCP sockets
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_net_init\fP (void)"
+.br
+.ti -1c
+.RI "int \fBwget_net_deinit\fP (void)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_dns\fP (wget_tcp *tcp, \fBwget_dns\fP *dns)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_tcp_fastopen\fP (wget_tcp *tcp, int tcp_fastopen)"
+.br
+.ti -1c
+.RI "char \fBwget_tcp_get_tcp_fastopen\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_tls_false_start\fP (wget_tcp *tcp, int false_start)"
+.br
+.ti -1c
+.RI "char \fBwget_tcp_get_tls_false_start\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_protocol\fP (wget_tcp *tcp, int protocol)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_protocol\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_preferred_family\fP (wget_tcp *tcp, int family)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_preferred_family\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_family\fP (wget_tcp *tcp, int family)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_family\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_local_port\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_connect_timeout\fP (wget_tcp *tcp, int timeout)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_timeout\fP (wget_tcp *tcp, int timeout)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_timeout\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_bind_address\fP (wget_tcp *tcp, const char *bind_address)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_ssl\fP (wget_tcp *tcp, int ssl)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_get_ssl\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "const char * \fBwget_tcp_get_ip\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_set_ssl_hostname\fP (wget_tcp *tcp, const char *hostname)"
+.br
+.ti -1c
+.RI "const char * \fBwget_tcp_get_ssl_hostname\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "wget_tcp * \fBwget_tcp_init\fP (void)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_deinit\fP (wget_tcp **_tcp)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_ready_2_transfer\fP (wget_tcp *tcp, int flags)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_connect\fP (wget_tcp *tcp, const char *host, uint16_t port)"
+.br
+.ti -1c
+.RI "int \fBwget_tcp_tls_start\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_tls_stop\fP (wget_tcp *tcp)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_tcp_read\fP (wget_tcp *tcp, char *buf, size_t count)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_tcp_write\fP (wget_tcp *tcp, const char *buf, size_t count)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_tcp_vprintf\fP (wget_tcp *tcp, const char *fmt, va_list args)"
+.br
+.ti -1c
+.RI "ssize_t \fBwget_tcp_printf\fP (wget_tcp *tcp, const char *fmt,\&.\&.\&.)"
+.br
+.ti -1c
+.RI "void \fBwget_tcp_close\fP (wget_tcp *tcp)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+TCP sockets and DNS cache management functions\&.
+.PP
+The following features are supported:
+.PP
+.IP "\(bu" 2
+TCP Fast Open (\fCRFC 7413\fP)
+.IP "\(bu" 2
+SSL/TLS
+.PP
+.PP
+Most functions here take a \fCwget_tcp\fP structure as argument\&.
+.PP
+The \fCwget_tcp\fP structure represents a TCP connection\&. You create it with \fBwget_tcp_init()\fP and destroy it with \fBwget_tcp_deinit()\fP\&. You can connect to a remote host with \fBwget_tcp_connect()\fP, or listen for incoming connections (and accept them) with wget_tcp_listen() and wget_tcp_accept()\&. You end a connection with \fBwget_tcp_close()\fP\&.
+.PP
+There are several knobs you can use to customize the behavior of most functions here\&. The list that follows describes the most important parameters, although you can look at the getter and setter functions here to see them all (\fCwget_tcp_get_xxx\fP, \fCwget_tcp_set_xxx\fP)\&.
+.PP
+.IP "\(bu" 2
+Timeout: maximum time to wait for an operation to complete\&. For example, for \fBwget_tcp_read()\fP, it sets the maximum time to wait until some data is available to read\&. Most functions here can be non-blocking (with timeout = 0) returning immediately or they can block indefinitely until something happens (with timeout = -1)\&. For any value greater than zero, the timeout is taken as milliseconds\&.
+.IP "\(bu" 2
+Family and preferred family: these are used to determine which address family should be used when resolving a host name or IP address\&. You probably use \fCAF_INET\fP or \fCAF_INET6\fP most of the time\&. The first one forces the library to use that family, failing if it cannot find any IP address with it\&. The second one is just a hint, about which family you would prefer; it will try to get an address of that family if possible, and will get another one if not\&.
+.IP "\(bu" 2
+SSL/TLS: do you want to use TLS?
+.PP
+.PP
+When you create a new \fCwget_tcp\fP with \fBwget_tcp_init()\fP, it is initialized with the following parameters:
+.PP
+.IP "\(bu" 2
+Timeout: -1
+.IP "\(bu" 2
+Connection timeout (max\&. time to wait for a connection to be accepted by the remote host): -1
+.IP "\(bu" 2
+DNS timeout (max\&. time to wait for a DNS query to return): -1
+.IP "\(bu" 2
+Family: \fCAF_UNSPEC\fP (basically means 'I don't care, pick the first one available')\&. 
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int wget_net_init (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+0 for success, else failure
+.RE
+.PP
+Initialize the resources needed for network operations\&. 
+.SS "int wget_net_deinit (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+0 for success, else failure
+.RE
+.PP
+Free the resources allocated by \fBwget_net_init()\fP\&. 
+.SS "void wget_tcp_set_dns (wget_tcp * tcp, \fBwget_dns\fP * dns)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.br
+\fIprotocol\fP The protocol, either WGET_PROTOCOL_HTTP_2_0 or WGET_PROTOCOL_HTTP_1_1\&.
+.RE
+.PP
+Set the protocol for the connection provided, or globally\&.
+.PP
+If \fCtcp\fP is NULL, theprotocol will be set globally (for all connections)\&. Otherwise, only for the provided connection (\fCtcp\fP)\&. 
+.SS "void wget_tcp_set_tcp_fastopen (wget_tcp * tcp, int tcp_fastopen)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.br
+\fItcp_fastopen\fP 1 or 0, whether to enable or disable TCP Fast Open\&.
+.RE
+.PP
+Enable or disable TCP Fast Open (\fCRFC 7413\fP), if available\&.
+.PP
+This function is a no-op on systems where TCP Fast Open is not supported\&.
+.PP
+If \fCtcp\fP is NULL, TCP Fast Open is enabled or disabled globally\&. 
+.SS "char wget_tcp_get_tcp_fastopen (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if TCP Fast Open is enabled, 0 otherwise\&.
+.RE
+.PP
+Tells whether TCP Fast Open is enabled or not\&.
+.PP
+You can enable and disable it with \fBwget_tcp_set_tcp_fastopen()\fP\&. 
+.SS "void wget_tcp_set_tls_false_start (wget_tcp * tcp, int false_start)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.br
+\fIfalse_start\fP 1 or 0, whether to enable or disable TLS False Start\&.
+.RE
+.PP
+Enable or disable TLS False Start (\fCRFC 7918\fP)\&.
+.PP
+If \fCtcp\fP is NULL, TLS False Start is enabled or disabled globally\&. 
+.SS "char wget_tcp_get_tls_false_start (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if TLS False Start is enabled, 0 otherwise\&.
+.RE
+.PP
+Tells whether TLS False Start is enabled or not\&.
+.PP
+You can enable and disable it with \fBwget_tcp_set_tls_false_start()\fP\&. 
+.SS "void wget_tcp_set_protocol (wget_tcp * tcp, int protocol)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.br
+\fIprotocol\fP The protocol, either WGET_PROTOCOL_HTTP_2_0 or WGET_PROTOCOL_HTTP_1_1\&.
+.RE
+.PP
+Set the protocol for the connection provided, or globally\&.
+.PP
+If \fCtcp\fP is NULL, theprotocol will be set globally (for all connections)\&. Otherwise, only for the provided connection (\fCtcp\fP)\&. 
+.SS "int wget_tcp_get_protocol (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The protocol with this connection, currently WGET_PROTOCOL_HTTP_2_0 or WGET_PROTOCOL_HTTP_1_1\&.
+.RE
+.PP
+Get protocol used with the provided connection, or globally (if \fCtcp\fP is NULL)\&. 
+.SS "void wget_tcp_set_preferred_family (wget_tcp * tcp, int family)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.br
+\fIfamily\fP One of the socket families defined in \fC<socket\&.h>\fP, such as \fCAF_INET\fP or \fCAF_INET6\fP\&.
+.RE
+.PP
+Tells the preferred address family that should be used when establishing a TCP connection\&.
+.PP
+wget_tcp_resolve() will favor that and pick an address of that family if possible\&.
+.PP
+If \fCtcp\fP is NULL, the preferred address family will be set globally\&. 
+.SS "int wget_tcp_get_preferred_family (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+One of the socket families defined in \fC<socket\&.h>\fP, such as \fCAF_INET\fP or \fCAF_INET6\fP\&.
+.RE
+.PP
+Get the preferred address family that was previously set with \fBwget_tcp_set_preferred_family()\fP\&. 
+.SS "void wget_tcp_set_family (wget_tcp * tcp, int family)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.br
+\fIfamily\fP One of the socket families defined in \fC<socket\&.h>\fP, such as \fCAF_INET\fP or \fCAF_INET6\fP\&.
+.RE
+.PP
+Tell the address family that will be used when establishing a TCP connection\&.
+.PP
+wget_tcp_resolve() will pick an address of that family, or fail if it cannot find one\&.
+.PP
+If \fCtcp\fP is NULL, the address family will be set globally\&. 
+.SS "int wget_tcp_get_family (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+One of the socket families defined in \fC<socket\&.h>\fP, such as \fCAF_INET\fP or \fCAF_INET6\fP\&.
+.RE
+.PP
+Get the address family that was previously set with \fBwget_tcp_set_family()\fP\&. 
+.SS "int wget_tcp_get_local_port (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The local port\&.
+.RE
+.PP
+Get the port number the TCP connection \fCtcp\fP is bound to on the local machine\&. 
+.SS "void wget_tcp_set_connect_timeout (wget_tcp * tcp, int timeout)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A TCP connection\&. 
+.br
+\fItimeout\fP The timeout value\&.
+.RE
+.PP
+Set the timeout for the TCP connection\&.
+.PP
+This is the maximum time to wait until the remote host accepts our connection\&.
+.PP
+The following two values are special:
+.PP
+.IP "\(bu" 2
+\fC0\fP: No timeout, immediate\&.
+.IP "\(bu" 2
+\fC-1\fP: Infinite timeout\&. Wait indefinitely\&. 
+.PP
+
+.SS "void wget_tcp_set_timeout (wget_tcp * tcp, int timeout)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A TCP connection\&. 
+.br
+\fItimeout\fP The timeout value\&.
+.RE
+.PP
+Set the timeout (in milliseconds) for \fBwget_tcp_read()\fP, \fBwget_tcp_write()\fP and wget_tcp_accept()\&.
+.PP
+The following two values are special:
+.PP
+.IP "\(bu" 2
+\fC0\fP: No timeout, immediate\&.
+.IP "\(bu" 2
+\fC-1\fP: Infinite timeout\&. Wait indefinitely\&. 
+.PP
+
+.SS "int wget_tcp_get_timeout (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A TCP connection\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The timeout value that was set with \fBwget_tcp_set_timeout()\fP\&.
+.RE
+.PP
+Get the timeout value that was set with \fBwget_tcp_set_timeout()\fP\&. 
+.SS "void wget_tcp_set_bind_address (wget_tcp * tcp, const char * bind_address)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A TCP connection\&. Might be NULL\&. 
+.br
+\fIbind_address\fP An IP address or host name\&.
+.RE
+.PP
+Set the IP address/hostname the socket \fCtcp\fP will bind to on the local machine when connecting to a remote host\&.
+.PP
+The hostname can explicitly set the port after a colon (':')\&.
+.PP
+This is mainly relevant to \fBwget_tcp_connect()\fP\&. 
+.SS "void wget_tcp_set_ssl (wget_tcp * tcp, int ssl)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.br
+\fIssl\fP Flag to enable or disable SSL/TLS on the given connection\&.
+.RE
+.PP
+Enable or disable SSL/TLS\&.
+.PP
+If \fCtcp\fP is NULL, TLS will be enabled globally\&. Otherwise, TLS will be enabled only for the provided connection\&. 
+.SS "int wget_tcp_get_ssl (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if TLs is enabled, 0 otherwise\&.
+.RE
+.PP
+Tells whether TLS is enabled or not\&. 
+.SS "const char* wget_tcp_get_ip (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+IP address as string, NULL if not available\&.
+.RE
+.PP
+Returns the IP address of a \fCwget_tcp\fP instance\&. 
+.SS "void wget_tcp_set_ssl_hostname (wget_tcp * tcp, const char * hostname)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.br
+\fIhostname\fP A hostname\&. The value of the SNI field\&.
+.RE
+.PP
+Sets the TLS Server Name Indication (SNI)\&. For more info see \fCRFC 6066, sect\&. 3\fP\&.
+.PP
+SNI basically does at the TLS layer what the \fCHost:\fP header field does at the application (HTTP) layer\&. The server might use this information to locate an appropriate X\&.509 certificate from a pool of certificates, or to direct the request to a specific virtual host, for instance\&. 
+.SS "const char* wget_tcp_get_ssl_hostname (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A hostname\&. The value of the SNI field\&.
+.RE
+.PP
+Returns the value that was set to SNI with a previous call to \fBwget_tcp_set_ssl_hostname()\fP\&. 
+.SS "wget_tcp* wget_tcp_init (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+A new \fCwget_tcp\fP structure, with pre-defined parameters\&.
+.RE
+.PP
+Create a new \fCwget_tcp\fP structure, that represents a TCP connection\&. It can be destroyed with \fBwget_tcp_deinit()\fP\&.
+.PP
+This function does not establish or modify a TCP connection in any way\&. That can be done with the other functions in this file, such as \fBwget_tcp_connect()\fP or wget_tcp_listen() and wget_tcp_accept()\&. 
+.SS "void wget_tcp_deinit (wget_tcp ** _tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fI_tcp\fP A \fBpointer\fP to a \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. Might be NULL\&.
+.RE
+.PP
+Release a TCP connection (created with \fBwget_tcp_init()\fP)\&.
+.PP
+The \fCwget_tcp\fP structure will be freed and \fC_tcp\fP will be set to NULL\&.
+.PP
+If \fC_tcp\fP is NULL, the SNI field will be cleared\&.
+.PP
+Does not free the internal DNS cache, so that other connections can re-use it\&. Call \fBwget_dns_cache_free()\fP if you want to free it\&. 
+.SS "int wget_tcp_ready_2_transfer (wget_tcp * tcp, int flags)"
+Test whether the given connection (\fCtcp\fP) is ready to read or write\&.
+.PP
+The parameter \fCflags\fP can have one or both (with bitwise OR) of the following values:
+.PP
+.IP "\(bu" 2
+\fCWGET_IO_READABLE\fP: Is data available for reading?
+.IP "\(bu" 2
+\fCWGET_IO_WRITABLE\fP: Can we write immediately (without having to wait until the TCP buffer frees)? 
+.PP
+
+.SS "int wget_tcp_connect (wget_tcp * tcp, const char * host, uint16_t port)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP A \fCwget_tcp\fP structure representing a TCP connection, returned by \fBwget_tcp_init()\fP\&. 
+.br
+\fIhost\fP Hostname or IP address to connect to\&. 
+.br
+\fIport\fP port number 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS (0) on success, or a negative integer on error (some of WGET_E_XXX defined in \fC<\fBwget\&.h\fP>\fP)\&.
+.RE
+.PP
+Open a TCP connection with a remote host\&.
+.PP
+This function will use TLS if it has been enabled for this \fCwget_tcp\fP\&. You can enable it with \fBwget_tcp_set_ssl()\fP\&. Additionally, you can also use \fBwget_tcp_set_ssl_hostname()\fP to set the Server Name Indication (SNI)\&.
+.PP
+You can set which IP address and port on the local machine will the socket be bound to with \fBwget_tcp_set_bind_address()\fP\&. Otherwise the socket will bind to any address and port chosen by the operating system\&.
+.PP
+This function will try to use TCP Fast Open if enabled and available\&. If TCP Fast Open fails, it will fall back to the normal TCP handshake, without raising an error\&. You can enable TCP Fast Open with \fBwget_tcp_set_tcp_fastopen()\fP\&.
+.PP
+If the connection fails, \fCWGET_E_CONNECT\fP is returned\&. 
+.SS "int wget_tcp_tls_start (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active connection\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS (0) on success, or a negative integer on error (one of WGET_E_XXX, defined in \fC<\fBwget\&.h\fP>\fP)\&. Start TLS for this connection\&.
+.RE
+.PP
+This will typically be called by wget_tcp_accept()\&.
+.PP
+If the socket is listening (e\&.g\&. wget_tcp_listen(), wget_tcp_accept()), it will expect the client to perform a TLS handshake, and fail if it doesn't\&.
+.PP
+If this is a client connection (e\&.g\&. \fBwget_tcp_connect()\fP), it will try perform a TLS handshake with the server\&. 
+.SS "void wget_tcp_tls_stop (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active connection\&.
+.RE
+.PP
+Stops TLS, but does not close the connection\&. Data will be transmitted in the clear from now on\&. 
+.SS "ssize_t wget_tcp_read (wget_tcp * tcp, char * buf, size_t count)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active TCP connection\&. 
+.br
+\fIbuf\fP Destination buffer, at least \fCcount\fP bytes long\&. 
+.br
+\fIcount\fP Length of the buffer \fCbuf\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Number of bytes read
+.RE
+.PP
+Read \fCcount\fP bytes of data from the TCP connection represented by \fCtcp\fP and store them in the buffer \fCbuf\fP\&.
+.PP
+This function knows whether the provided connection is over TLS or not and it will do the right thing\&.
+.PP
+The \fCtcp->timeout\fP parameter is taken into account by this function as well\&. It specifies how long should this function wait until there's data available to read (in milliseconds)\&. The default timeout is -1, which means to wait indefinitely\&.
+.PP
+The following two values are special:
+.PP
+.IP "\(bu" 2
+\fC0\fP: No timeout, immediate\&.
+.IP "\(bu" 2
+\fC-1\fP: Infinite timeout\&. Wait indefinitely until a new connection comes\&.
+.PP
+.PP
+You can set the timeout with \fBwget_tcp_set_timeout()\fP\&.
+.PP
+In particular, the returned value will be zero if no data was available for reading before the timeout elapsed\&. 
+.SS "ssize_t wget_tcp_write (wget_tcp * tcp, const char * buf, size_t count)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active TCP connection\&. 
+.br
+\fIbuf\fP A buffer, at least \fCcount\fP bytes long\&. 
+.br
+\fIcount\fP Number of bytes from \fCbuf\fP to send through \fCtcp\fP\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The number of bytes written, or -1 on error\&.
+.RE
+.PP
+Write \fCcount\fP bytes of data from the buffer \fCbuf\fP to the TCP connection represented by \fCtcp\fP\&.
+.PP
+This function knows whether the provided connection is over TLS or not and it will do the right thing\&.
+.PP
+TCP Fast Open will be used if it's available and enabled\&. You can enable TCP Fast Open with \fBwget_tcp_set_tcp_fastopen()\fP\&.
+.PP
+This function honors the \fCtimeout\fP parameter\&. If the write operation fails because the socket buffer is full, then it will wait at most that amount of milliseconds\&. If after the timeout the socket is still unavailable for writing, this function returns zero\&.
+.PP
+The following two values are special:
+.PP
+.IP "\(bu" 2
+\fC0\fP: No timeout\&. The socket must be available immediately\&.
+.IP "\(bu" 2
+\fC-1\fP: Infinite timeout\&. Wait indefinitely until the socket becomes available\&.
+.PP
+.PP
+You can set the timeout with \fBwget_tcp_set_timeout()\fP\&. 
+.SS "ssize_t wget_tcp_vprintf (wget_tcp * tcp, const char * fmt, va_list args)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active TCP connection\&. 
+.br
+\fIfmt\fP Format string (like in \fCprintf(3)\fP)\&. 
+.br
+\fIargs\fP \fCva_args\fP argument list (like in \fCvprintf(3)\fP)
+.RE
+.PP
+Write data in vprintf-style format, to the connection \fCtcp\fP\&.
+.PP
+It uses \fBwget_tcp_write()\fP\&. 
+.SS "ssize_t wget_tcp_printf (wget_tcp * tcp, const char * fmt,  \&.\&.\&.)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active TCP connection\&. 
+.br
+\fIfmt\fP Format string (like in \fCprintf(3)\fP)\&.
+.RE
+.PP
+Write data in printf-style format, to the connection \fCtcp\fP\&.
+.PP
+It uses \fBwget_tcp_vprintf()\fP, which in turn uses \fBwget_tcp_write()\fP\&. 
+.SS "void wget_tcp_close (wget_tcp * tcp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fItcp\fP An active TCP connection
+.RE
+.PP
+Close a TCP connection\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

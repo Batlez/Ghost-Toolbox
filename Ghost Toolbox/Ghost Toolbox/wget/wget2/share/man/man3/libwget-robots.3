@@ -1,0 +1,132 @@
+.TH "libwget-robots" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-robots \- Robots Exclusion file parser
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBwget_robots_st\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBwget_robots_parse\fP (\fBwget_robots\fP **_robots, const char *data, const char *client)"
+.br
+.ti -1c
+.RI "void \fBwget_robots_free\fP (\fBwget_robots\fP **robots)"
+.br
+.ti -1c
+.RI "int \fBwget_robots_get_path_count\fP (\fBwget_robots\fP *robots)"
+.br
+.ti -1c
+.RI "\fBwget_string\fP * \fBwget_robots_get_path\fP (\fBwget_robots\fP *robots, int index)"
+.br
+.ti -1c
+.RI "int \fBwget_robots_get_sitemap_count\fP (\fBwget_robots\fP *robots)"
+.br
+.ti -1c
+.RI "const char * \fBwget_robots_get_sitemap\fP (\fBwget_robots\fP *robots, int index)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+The purpose of this set of functions is to parse a Robots Exclusion Standard file into a data structure for easy access\&. 
+.SH "Function Documentation"
+.PP 
+.SS "int wget_robots_parse (\fBwget_robots\fP ** _robots, const char * data, const char * client)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdata\fP Memory with robots\&.txt content (with trailing 0-byte) 
+.br
+\fIclient\fP Name of the client / user-agent 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Return an allocated wget_robots structure or NULL on error
+.RE
+.PP
+The function parses the robots\&.txt \fCdata\fP and returns a ROBOTS structure including a list of the disallowed paths and including a list of the sitemap files\&.
+.PP
+The ROBOTS structure has to be freed by calling \fBwget_robots_free()\fP\&. 
+.SS "void wget_robots_free (\fBwget_robots\fP ** robots)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrobots\fP Pointer to Pointer to wget_robots structure
+.RE
+.PP
+\fBwget_robots_free()\fP free's the formerly allocated wget_robots structure\&. 
+.SS "int wget_robots_get_path_count (\fBwget_robots\fP * robots)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrobots\fP Pointer to instance of wget_robots 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Returns the number of paths listed in \fCrobots\fP 
+.RE
+.PP
+
+.SS "\fBwget_string\fP* wget_robots_get_path (\fBwget_robots\fP * robots, int index)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrobots\fP Pointer to instance of wget_robots 
+.br
+\fIindex\fP Index of the wanted path 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Returns the path at \fCindex\fP or NULL 
+.RE
+.PP
+
+.SS "int wget_robots_get_sitemap_count (\fBwget_robots\fP * robots)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrobots\fP Pointer to instance of wget_robots 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Returns the number of sitemaps listed in \fCrobots\fP 
+.RE
+.PP
+
+.SS "const char* wget_robots_get_sitemap (\fBwget_robots\fP * robots, int index)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIrobots\fP Pointer to instance of wget_robots 
+.br
+\fIindex\fP Index of the wanted sitemap URL 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Returns the sitemap URL at \fCindex\fP or NULL 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

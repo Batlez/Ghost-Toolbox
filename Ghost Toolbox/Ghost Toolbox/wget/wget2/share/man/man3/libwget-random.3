@@ -1,0 +1,62 @@
+.TH "libwget-random" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-random \- Random functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwget_random_init\fP (void)"
+.br
+.ti -1c
+.RI "void \fBwget_random_exit\fP (void)"
+.br
+.ti -1c
+.RI "int \fBwget_random\fP (void)"
+.br
+.ti -1c
+.RI "void \fBwget_srandom\fP (unsigned int seed)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This is wrapper code around gnulib's srandom_r() and random_r() with automatic seeding 
+.SH "Function Documentation"
+.PP 
+.SS "void wget_random_init (void)"
+Random API initialization, allocating/preparing the internal resources\&.
+.PP
+On systems with automatic library constructors, this function doesn't have to be called explicitly\&.
+.PP
+This function is not thread-safe\&. 
+.SS "void wget_random_exit (void)"
+Random API deinitialization, free'ing all internal resources\&.
+.PP
+On systems with automatic library destructors, this function doesn't have to be called explicitly\&.
+.PP
+This function is not thread-safe\&. 
+.SS "int wget_random (void)"
+
+.PP
+\fBReturns\fP
+.RS 4
+Random value between 0 and RAND_MAX
+.RE
+.PP
+This functions wraps around gnulib's random_r()\&. It performs a thread-safe seeding on the first use, if not done before by \fBwget_srandom()\fP; 
+.SS "void wget_srandom (unsigned int seed)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIseed\fP Value to seed the random generator
+.RE
+.PP
+This functions wraps around srandom_r() to make a thread-safe seeding for \fBwget_random()\fP\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

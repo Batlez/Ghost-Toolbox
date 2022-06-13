@@ -1,0 +1,36 @@
+.TH "libwget-parse_sitemap" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-parse_sitemap \- Sitemap URL extraction routines
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwget_sitemap_get_urls_inline\fP (const char *sitemap, \fBwget_vector\fP **urls, \fBwget_vector\fP **sitemap_urls)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Routines for URL extraction from Sitemap XML data\&. 
+.SH "Function Documentation"
+.PP 
+.SS "void wget_sitemap_get_urls_inline (const char * sitemap, \fBwget_vector\fP ** urls, \fBwget_vector\fP ** sitemap_urls)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIsitemap\fP Sitemap XML data 
+.br
+\fIurls\fP Pointer to return vector of URLs 
+.br
+\fIsitemap_urls\fP Pointer to return vector of sitemap URLs
+.RE
+.PP
+Finds all URLs and sitemap URLs within the Sitemap XML data \fCsitemap\fP and returns them as vector in \fCurls\fP and/or \fCsitemap_urls\fP\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

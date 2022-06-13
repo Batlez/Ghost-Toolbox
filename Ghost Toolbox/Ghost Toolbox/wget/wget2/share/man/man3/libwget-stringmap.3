@@ -1,0 +1,70 @@
+.TH "libwget-stringmap" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-stringmap \- Stringmap functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBwget_stringmap\fP * \fBwget_stringmap_create\fP (int max)"
+.br
+.ti -1c
+.RI "\fBwget_stringmap\fP * \fBwget_stringmap_create_nocase\fP (int max)"
+.br
+.in -1c
+.in +1c
+.ti -1c
+.RI "typedef \fBwget_hashmap\fP \fBwget_stringmap\fP"
+.br
+.RI "Type of the stringmap\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Stringmaps are key/value stores that perform at O(1) for insertion, searching and removing\&. The key is a C string\&.
+.PP
+These functions are a wrapper around the Hashmap API\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBwget_stringmap\fP* wget_stringmap_create (int max)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImax\fP Initial number of pre-allocated entries 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+New stringmap instance
+.RE
+.PP
+Create a new stringmap instance with initial size \fCmax\fP\&. It should be free'd after use with wget_stringmap_free()\&.
+.PP
+The hash function is an efficient string hash algorithm originally researched by Paul Larson\&.
+.PP
+The compare function is strcmp()\&. The key strings are compared case-sensitive\&. 
+.SS "\fBwget_stringmap\fP* wget_stringmap_create_nocase (int max)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImax\fP Initial number of pre-allocated entries 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+New stringmap instance
+.RE
+.PP
+Create a new stringmap instance with initial size \fCmax\fP\&. It should be free'd after use with wget_stringmap_free()\&.
+.PP
+The hash function is an efficient string hash algorithm originally researched by Paul Larson, using lowercase'd keys\&.
+.PP
+The compare function is strcasecmp() (case-insensitive)\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

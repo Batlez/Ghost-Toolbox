@@ -1,0 +1,409 @@
+.TH "libwget-hashmap" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-hashmap \- Hashmap functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBwget_hashmap_iterator\fP * \fBwget_hashmap_iterator_alloc\fP (\fBwget_hashmap\fP *h)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_iterator_free\fP (\fBwget_hashmap_iterator\fP **iter)"
+.br
+.ti -1c
+.RI "void * \fBwget_hashmap_iterator_next\fP (\fBwget_hashmap_iterator\fP *iter, void **value)"
+.br
+.ti -1c
+.RI "\fBwget_hashmap\fP * \fBwget_hashmap_create\fP (int max, \fBwget_hashmap_hash_fn\fP *hash, \fBwget_hashmap_compare_fn\fP *cmp)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_put\fP (\fBwget_hashmap\fP *h, const void *key, const void *value)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_contains\fP (const \fBwget_hashmap\fP *h, const void *key)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_get\fP (const \fBwget_hashmap\fP *h, const void *key, void **value)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_remove\fP (\fBwget_hashmap\fP *h, const void *key)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_remove_nofree\fP (\fBwget_hashmap\fP *h, const void *key)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_free\fP (\fBwget_hashmap\fP **h)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_clear\fP (\fBwget_hashmap\fP *h)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_size\fP (const \fBwget_hashmap\fP *h)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_browse\fP (const \fBwget_hashmap\fP *h, \fBwget_hashmap_browse_fn\fP *browse, void *ctx)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_setcmpfunc\fP (\fBwget_hashmap\fP *h, \fBwget_hashmap_compare_fn\fP *cmp)"
+.br
+.ti -1c
+.RI "int \fBwget_hashmap_sethashfunc\fP (\fBwget_hashmap\fP *h, \fBwget_hashmap_hash_fn\fP *hash)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_set_key_destructor\fP (\fBwget_hashmap\fP *h, \fBwget_hashmap_key_destructor\fP *destructor)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_set_value_destructor\fP (\fBwget_hashmap\fP *h, \fBwget_hashmap_value_destructor\fP *destructor)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_set_load_factor\fP (\fBwget_hashmap\fP *h, float factor)"
+.br
+.ti -1c
+.RI "void \fBwget_hashmap_set_resize_factor\fP (\fBwget_hashmap\fP *h, float factor)"
+.br
+.in -1c
+.in +1c
+.ti -1c
+.RI "typedef struct \fBwget_hashmap_st\fP \fBwget_hashmap\fP"
+.br
+.RI "Type of the hashmap\&. "
+.ti -1c
+.RI "typedef int \fBwget_hashmap_compare_fn\fP(const void *key1, const void *key2)"
+.br
+.RI "Type of the hashmap compare function\&. "
+.ti -1c
+.RI "typedef unsigned int \fBwget_hashmap_hash_fn\fP(const void *key)"
+.br
+.RI "Type of the hashmap hash function\&. "
+.ti -1c
+.RI "typedef int \fBwget_hashmap_browse_fn\fP(void *ctx, const void *key, void *value)"
+.br
+.RI "Type of the hashmap browse callback function\&. "
+.ti -1c
+.RI "typedef void \fBwget_hashmap_key_destructor\fP(void *key)"
+.br
+.RI "Type of the hashmap key destructor function\&. "
+.ti -1c
+.RI "typedef void \fBwget_hashmap_value_destructor\fP(void *value)"
+.br
+.RI "Type of the hashmap value destructor function\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Hashmaps are key/value stores that perform at O(1) for insertion, searching and removing\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBwget_hashmap_iterator\fP* wget_hashmap_iterator_alloc (\fBwget_hashmap\fP * h)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+New iterator instance for \fCh\fP 
+.RE
+.PP
+Creates a hashmap iterator for \fCh\fP\&. 
+.SS "void wget_hashmap_iterator_free (\fBwget_hashmap_iterator\fP ** iter)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIiter\fP Hashmap iterator
+.RE
+.PP
+Free the given iterator \fCiter\fP\&. 
+.SS "void* wget_hashmap_iterator_next (\fBwget_hashmap_iterator\fP * iter, void ** value)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIiter\fP Hashmap iterator 
+.br
+\fIvalue\fP Pointer to the value belonging to the returned key 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Pointer to the key or NULL if no more elements left
+.RE
+.PP
+Returns the next key / value in the hashmap\&. If all key/value pairs have been iterated over the function returns NULL and \fCvalue\fP is untouched\&.
+.PP
+When iterating over a hashmap, the order of returned key/value pairs is not defined\&. 
+.SS "\fBwget_hashmap\fP* wget_hashmap_create (int max, \fBwget_hashmap_hash_fn\fP * hash, \fBwget_hashmap_compare_fn\fP * cmp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fImax\fP Initial number of pre-allocated entries 
+.br
+\fIhash\fP Hash function to build hashes from elements 
+.br
+\fIcmp\fP Comparison function used to find elements 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+New hashmap instance
+.RE
+.PP
+Create a new hashmap instance with initial size \fCmax\fP\&. It should be free'd after use with \fBwget_hashmap_free()\fP\&.
+.PP
+Before the first insertion of an element, \fChash\fP and \fCcmp\fP must be set\&. So if you use NULL values here, you have to call \fBwget_hashmap_setcmpfunc()\fP and/or wget_hashmap_hashcmpfunc() with appropriate function pointers\&. No doing so will result in undefined behavior (likely you'll see a segmentation fault)\&. 
+.SS "int wget_hashmap_put (\fBwget_hashmap\fP * h, const void * key, const void * value)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap to put data into 
+.br
+\fIkey\fP Key to insert into \fCh\fP 
+.br
+\fIvalue\fP Value to insert into \fCh\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if inserted a new entry, 1 if entry existed, WGET_E_MEMORY if internal allocation failed
+.RE
+.PP
+Insert a key/value pair into hashmap \fCh\fP\&.
+.PP
+\fCkey\fP and \fCvalue\fP are \fInot\fP cloned, the hashmap takes 'ownership' of both\&.
+.PP
+If \fCkey\fP already exists and the pointer values the old and the new key differ, the old key will be destroyed by calling the key destructor function (default is free())\&.
+.PP
+To realize a hashset (just keys without values), \fCvalue\fP may be NULL\&.
+.PP
+Neither \fCh\fP nor \fCkey\fP must be NULL, else the return value will always be 0\&. 
+.SS "int wget_hashmap_contains (const \fBwget_hashmap\fP * h, const void * key)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIkey\fP Key to search for 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCkey\fP has been found, 0 if not found
+.RE
+.PP
+Check if \fCkey\fP exists in \fCh\fP\&. 
+.SS "int wget_hashmap_get (const \fBwget_hashmap\fP * h, const void * key, void ** value)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIkey\fP Key to search for 
+.br
+\fIvalue\fP Value to be returned 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCkey\fP has been found, 0 if not found
+.RE
+.PP
+Get the value for a given key\&.
+.PP
+Neither \fCh\fP nor \fCkey\fP must be NULL\&. 
+.SS "int wget_hashmap_remove (\fBwget_hashmap\fP * h, const void * key)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIkey\fP Key to be removed 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCkey\fP has been removed, 0 if not found
+.RE
+.PP
+Remove \fCkey\fP from hashmap \fCh\fP\&.
+.PP
+If \fCkey\fP is found, the key and value destructor functions are called when removing the entry from the hashmap\&. 
+.SS "int wget_hashmap_remove_nofree (\fBwget_hashmap\fP * h, const void * key)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIkey\fP Key to be removed 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fCkey\fP has been removed, 0 if not found
+.RE
+.PP
+Remove \fCkey\fP from hashmap \fCh\fP\&.
+.PP
+Key and value destructor functions are \fInot\fP called when removing the entry from the hashmap\&. 
+.SS "void wget_hashmap_free (\fBwget_hashmap\fP ** h)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap to be free'd
+.RE
+.PP
+Remove all entries from hashmap \fCh\fP and free the hashmap instance\&.
+.PP
+Key and value destructor functions are called for each entry in the hashmap\&. 
+.SS "void wget_hashmap_clear (\fBwget_hashmap\fP * h)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap to be cleared
+.RE
+.PP
+Remove all entries from hashmap \fCh\fP\&.
+.PP
+Key and value destructor functions are called for each entry in the hashmap\&. 
+.SS "int wget_hashmap_size (const \fBwget_hashmap\fP * h)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Number of entries in hashmap \fCh\fP 
+.RE
+.PP
+Return the number of entries in the hashmap \fCh\fP\&. 
+.SS "int wget_hashmap_browse (const \fBwget_hashmap\fP * h, \fBwget_hashmap_browse_fn\fP * browse, void * ctx)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIbrowse\fP Function to be called for each element of \fCh\fP 
+.br
+\fIctx\fP Context variable use as param to \fCbrowse\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Return value of the last call to \fCbrowse\fP 
+.RE
+.PP
+Call function \fCbrowse\fP for each element of hashmap \fCh\fP or until \fCbrowse\fP returns a value not equal to zero\&.
+.PP
+\fCbrowse\fP is called with \fCctx\fP and the pointer to the current element\&.
+.PP
+The return value of the last call to \fCbrowse\fP is returned or 0 if either \fCh\fP or \fCbrowse\fP is NULL\&. 
+.SS "void wget_hashmap_setcmpfunc (\fBwget_hashmap\fP * h, \fBwget_hashmap_compare_fn\fP * cmp)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIcmp\fP Comparison function used to find keys
+.RE
+.PP
+Set the comparison function\&. 
+.SS "int wget_hashmap_sethashfunc (\fBwget_hashmap\fP * h, \fBwget_hashmap_hash_fn\fP * hash)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIhash\fP Hash function used to hash keys 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+WGET_E_SUCCESS if set successfully, else WGET_E_MEMORY or WGET_E_INVALID
+.RE
+.PP
+Set the key hash function\&.
+.PP
+The keys of all entries in the hashmap will be hashed again\&. This includes a memory allocation, so there is a possibility of failure\&. 
+.SS "void wget_hashmap_set_key_destructor (\fBwget_hashmap\fP * h, \fBwget_hashmap_key_destructor\fP * destructor)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIdestructor\fP Destructor function for keys
+.RE
+.PP
+Set the key destructor function\&.
+.PP
+Default is free()\&. 
+.SS "void wget_hashmap_set_value_destructor (\fBwget_hashmap\fP * h, \fBwget_hashmap_value_destructor\fP * destructor)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIdestructor\fP Destructor function for values
+.RE
+.PP
+Set the value destructor function\&.
+.PP
+Default is free()\&. 
+.SS "void wget_hashmap_set_load_factor (\fBwget_hashmap\fP * h, float factor)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIfactor\fP The load factor
+.RE
+.PP
+Set the load factor function\&.
+.PP
+The load factor is determines when to resize the internal memory\&. 0\&.75 means 'resize if 75% or more of all slots are used'\&.
+.PP
+The resize strategy is set by wget_hashmap_set_growth_policy()\&.
+.PP
+The resize (and rehashing) occurs earliest on the next insertion of a new key\&.
+.PP
+Default is 0\&.75\&. 
+.SS "void wget_hashmap_set_resize_factor (\fBwget_hashmap\fP * h, float factor)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP Hashmap 
+.br
+\fIfactor\fP Hashmap growth factor
+.RE
+.PP
+Set the factor for resizing the hashmap when it's load factor is reached\&.
+.PP
+The new size is 'factor * oldsize'\&. If the new size is less or equal 0, the involved put function will do nothing and the internal state of the hashmap will not change\&.
+.PP
+Default is 2\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

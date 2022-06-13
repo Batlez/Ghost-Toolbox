@@ -1,0 +1,42 @@
+.TH "libwget-ip" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-ip \- IP address functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBwget_ip_is_family\fP (const char *host, int family)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Routines to check IP address formats\&. 
+.SH "Function Documentation"
+.PP 
+.SS "bool wget_ip_is_family (const char * host, int family)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIhost\fP Host/IP string 
+.br
+\fIfamily\fP IP address family 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+1 if \fChost\fP matches is of \fCfamily\fP 
+.br
+ 0 if \fChost\fP does not match \fCfamily\fP 
+.br
+.RE
+.PP
+This functions checks if \fChost\fP matches the given \fCfamily\fP or not\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

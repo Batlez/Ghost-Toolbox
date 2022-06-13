@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libwget
+Description: Wget downloader C library.
+Version: 0.0.1
+URL: https://savannah.gnu.org/projects/wget
+Libs: -L${libdir} -lwget
+Cflags: -I${includedir}/libwget -I${libdir}/libwget/include

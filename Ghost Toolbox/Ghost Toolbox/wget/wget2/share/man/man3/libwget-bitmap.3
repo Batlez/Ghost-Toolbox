@@ -1,0 +1,128 @@
+.TH "libwget-bitmap" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-bitmap \- Bitmap management functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBwget_bitmap_st\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBbitmap_type\fP   uint64_t"
+.br
+.ti -1c
+.RI "#define \fBbitmap_bits\fP   (sizeof(bitmap_type) * 8)"
+.br
+.ti -1c
+.RI "#define \fBbitmap_shift\fP   6"
+.br
+.ti -1c
+.RI "#define \fBmap\fP(n)   (((\fBwget_bitmap\fP *)b)\->map[(n) >> bitmap_shift])"
+.br
+.ti -1c
+.RI "#define \fBbit\fP(n)   (((bitmap_type) 1) << ((n) & (bitmap_bits \- 1)))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBwget_bitmap_set\fP (\fBwget_bitmap\fP *b, unsigned n)"
+.br
+.ti -1c
+.RI "void \fBwget_bitmap_clear\fP (\fBwget_bitmap\fP *b, unsigned n)"
+.br
+.ti -1c
+.RI "bool \fBwget_bitmap_get\fP (const \fBwget_bitmap\fP *b, unsigned n)"
+.br
+.ti -1c
+.RI "int \fBwget_bitmap_init\fP (\fBwget_bitmap\fP **b, unsigned bits)"
+.br
+.ti -1c
+.RI "void \fBwget_bitmap_free\fP (\fBwget_bitmap\fP **b)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Bitmap (bit array) implementation\&.
+.PP
+This is useful when you need a bitmap with more than 64 bits\&. Up to 64 bits you can use the C99 uint64_t as a standard C bitfield\&.
+.PP
+As a usage example, Wget2 uses bitmaps for options with lists of HTTP status codes, which have values of 100-699\&. 
+.SH "Function Documentation"
+.PP 
+.SS "void wget_bitmap_set (\fBwget_bitmap\fP * b, unsigned n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIb\fP Bitmap to act on 
+.br
+\fIn\fP Number of the bit to set (0-\&.\&.\&.)
+.RE
+.PP
+Set the bit \fCn\fP in the bitmap \fCb\fP\&. 
+.SS "void wget_bitmap_clear (\fBwget_bitmap\fP * b, unsigned n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIb\fP Bitmap to act on 
+.br
+\fIn\fP Number of the bit to clear (0-\&.\&.\&.)
+.RE
+.PP
+Clear the bit \fCn\fP in the bitmap \fCb\fP\&. 
+.SS "bool wget_bitmap_get (const \fBwget_bitmap\fP * b, unsigned n)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIb\fP Bitmap to read from 
+.br
+\fIn\fP Number of the bit of interest (0-\&.\&.\&.) 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+0 if bit \fCn\fP is cleared or if \fCn\fP is out of range 1 if bit \fCis\fP set
+.RE
+.PP
+Returns whether the bit \fCn\fP is set or not\&. 
+.SS "int wget_bitmap_init (\fBwget_bitmap\fP ** b, unsigned bits)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIb\fP Pointer to the allocated bitmap 
+.br
+\fIbits\fP Number of bits 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A \fBwget_error\fP value
+.RE
+.PP
+Allocates a bitmap with a capacity of \fCbits\fP\&. It must be freed by \fBwget_bitmap_free()\fP after usage\&. 
+.SS "void wget_bitmap_free (\fBwget_bitmap\fP ** b)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIb\fP Pointer to bitmap to free
+.RE
+.PP
+Frees and clears the bitmap pointed to by \fCb\fP\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.

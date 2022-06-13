@@ -1,0 +1,90 @@
+.TH "libwget-xalloc" 3 "Sun Nov 29 2020" "Version 1.99.2" "wget2" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libwget-xalloc \- Memory allocation functions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBwget_malloc_function\fP * \fBwget_malloc_fn\fP = malloc"
+.br
+.ti -1c
+.RI "\fBwget_calloc_function\fP * \fBwget_calloc_fn\fP = calloc"
+.br
+.ti -1c
+.RI "\fBwget_realloc_function\fP * \fBwget_realloc_fn\fP = realloc"
+.br
+.ti -1c
+.RI "\fBwget_free_function\fP * \fBwget_free\fP = free"
+.br
+.in -1c
+.in +1c
+.ti -1c
+.RI "WGETAPI \fBwget_malloc_function\fP * \fBwget_malloc_fn\fP"
+.br
+.ti -1c
+.RI "WGETAPI \fBwget_calloc_function\fP * \fBwget_calloc_fn\fP"
+.br
+.ti -1c
+.RI "WGETAPI \fBwget_realloc_function\fP * \fBwget_realloc_fn\fP"
+.br
+.ti -1c
+.RI "WGETAPI \fBwget_free_function\fP * \fBwget_free\fP"
+.br
+.ti -1c
+.RI "RETURNS_NONNULL LIBWGET_WARN_UNUSED_RESULT size_t \fBsize\fP"
+.br
+.ti -1c
+.RI "#define \fBwget_xfree\fP(a)   do { if (a) { wget_free((void *)(a)); a=NULL; } } while (0)"
+.br
+.ti -1c
+.RI "typedef void * \fBwget_malloc_function\fP(size_t)"
+.br
+.RI "Type of malloc() function\&. "
+.ti -1c
+.RI "typedef void * \fBwget_calloc_function\fP(size_t, size_t)"
+.br
+.RI "Type of calloc() function\&. "
+.ti -1c
+.RI "typedef void * \fBwget_realloc_function\fP(void *, size_t)"
+.br
+.RI "Type of realloc() function\&. "
+.ti -1c
+.RI "typedef void \fBwget_free_function\fP(void *)"
+.br
+.RI "Type of free() function\&. "
+.ti -1c
+.RI "RETURNS_NONNULL LIBWGET_WARN_UNUSED_RESULT \fBWGET_GCC_ALLOC_SIZE\fP (1) WGET_GCC_MALLOC static inline void *NULLABLE wget_malloc(size_t size)"
+.br
+.ti -1c
+.RI "RETURNS_NONNULL LIBWGET_WARN_UNUSED_RESULT \fBWGET_GCC_ALLOC_SIZE2\fP (1, 2) WGET_GCC_MALLOC static inline void *NULLABLE wget_calloc(size_t nmemb"
+.br
+.ti -1c
+.RI "RETURNS_NONNULL LIBWGET_WARN_UNUSED_RESULT \fBWGET_GCC_ALLOC_SIZE\fP (2) static inline void *NULLABLE wget_realloc(void *ptr"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Global function pointers to memory allocation functions and to free()\&.
+.PP
+These pointers can be set to custom functions\&. 
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define wget_xfree(a)   do { if (a) { wget_free((void *)(a)); a=NULL; } } while (0)"
+Memory allocation function pointers 
+.SH "Variable Documentation"
+.PP 
+.SS "RETURNS_NONNULL LIBWGET_WARN_UNUSED_RESULT size_t size"
+\fBInitial value:\fP
+.PP
+.nf
+{
+    return wget_calloc_fn(nmemb, size)
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for wget2 from the source code\&.
