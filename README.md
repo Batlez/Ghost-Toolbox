@@ -2,6 +2,7 @@
 Run Ghost Toolbox on any operating system!
 
 Download the ZIP File and extract it's contents
+
 update.cmd is not present in this version 
 
 Copy and paste "nhcolor.exe" into System32 (this exe is responsible for the colourful text as well as verification that you are running this on Ghost Spectre OS)
