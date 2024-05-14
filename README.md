@@ -11,4 +11,7 @@ Now run Ghost Toolbox.cmd as Administrator.
 
 There you have it!
 NOT MADE BY ME (BATLEZ)
-![image](https://user-images.githubusercontent.com/63690709/173284932-79460e9c-7ced-40c1-a9fd-45f850e59dbe.png)
+
+### Screenshot 14-05-2024
+![image](https://github.com/Batlez/Ghost-Toolbox/assets/116146426/ba477e31-8680-4aa6-8456-f652cb5d6b5c)
+
