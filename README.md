@@ -1,17 +1,32 @@
-# Ghost-Toolbox
-Run Ghost Toolbox on any operating system!
+# Ghost-Toolbox 🛠️
+**Run Ghost Toolbox on any Windows operating system - made simple!**
 
-Download the ZIP File and extract it's contents
+## Quick Setup Guide 📋
 
-update.cmd is not present in this version 
+### Step 1: Download
+- Go to the **Releases** section and download the Ghost Toolbox folder
+- Extract it to your desired location
 
-Copy and paste "nhcolor.exe" into System32 (this exe is responsible for the colourful text as well as verification that you are running this on Ghost Spectre OS)
+### Step 2: Install Color Support
+- Find the file called `nhcolor.exe` in the downloaded folder
+- Copy this file to your `C:\Windows\System32` folder
+- *(This file enables colorful text and verifies Ghost Spectre OS compatibility)*
 
-Now run Ghost Toolbox.cmd as Administrator.
+### Step 3: Run the Toolbox
+- Right-click on `Ghost Toolbox.cmd` 
+- Select **"Run as Administrator"**
+- That's it! 🎉
 
-There you have it!
-NOT MADE BY ME (BATLEZ)
+## Important Notes ⚠️
+- The `update.cmd` file is **not included** in this version
+- You **must** run as Administrator for the toolbox to work properly
+- This tool works on any Windows OS, not just Ghost Spectre
 
-### Screenshot 14-05-2024
-![image](https://github.com/Batlez/Ghost-Toolbox/assets/116146426/ba477e31-8680-4aa6-8456-f652cb5d6b5c)
+---
 
+**Disclaimer:** This project is **NOT MADE BY ME** - I'm just sharing an improved version for easier use!
+
+### Preview
+![Ghost Toolbox Screenshot](https://github.com/Batlez/Ghost-Toolbox/assets/116146426/ba477e31-8680-4aa6-8456-f652cb5d6b5c)
+
+---
